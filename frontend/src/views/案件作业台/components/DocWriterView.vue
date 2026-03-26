@@ -15,7 +15,11 @@
       @import-word="handleImportWord"
       @export-word="handleExportWord"
       @comment-paragraph-click="handleCommentParagraphClick"
-    />
+    >
+      <template #cover>
+        <PdfPageCover src="/verdict-cover.pdf" />
+      </template>
+    </EditorArea>
     <RightWriterPanel
       ref="rightPanelRef"
       :ai-msgs="aiMsgs"
@@ -76,6 +80,7 @@
 import { ref, computed, nextTick } from 'vue';
 import LeftMaterialPanel from './LeftMaterialPanel.vue';
 import EditorArea from '@/components/editor/EditorArea.vue';
+import PdfPageCover from '@/components/editor/PdfPageCover.vue';
 import RightWriterPanel from './RightWriterPanel.vue';
 import FloatingSelectionToolbar from './FloatingSelectionToolbar.vue';
 import AiWritePopover from './AiWritePopover.vue';

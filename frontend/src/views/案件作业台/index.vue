@@ -8,14 +8,13 @@ import {
   summaryText,
   highlights,
   latestActivities,
-  timelineItems,
   flowTodos,
   workTodos,
   sideAlerts,
-  aiPoints,
 } from './mock'
 import DocWriterView from './components/DocWriterView.vue'
 import DocReviewView from './components/DocReviewView.vue'
+import DossierReadingView from './components/DossierReadingView.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -27,18 +26,6 @@ const activeView = ref('overview')
 const todoTab = ref('flow')
 
 const currentTodos = computed(() => (todoTab.value === 'flow' ? flowTodos : workTodos))
-
-const typeIconClass = (type) => {
-  const map = {
-    milestone: 'dot--blue-glow',
-    evidence: 'dot--green',
-    defense: 'dot--orange',
-    filing: 'dot--primary',
-    supplement: 'dot--gray',
-    process: 'dot--purple',
-  }
-  return map[type] || 'dot--primary'
-}
 
 const backToWorkbench = () => {
   router.push('/workbench')
@@ -78,10 +65,10 @@ const backToWorkbench = () => {
     </div>
 
     <!-- 三栏主体 -->
-    <div class="workbench-body" :class="{ 'workbench-body--wide': activeView === 'writing' || activeView === 'reading' }">
+    <div class="workbench-body" :class="{ 'workbench-body--wide': activeView === 'writing' || activeView === 'reading' || activeView === 'dossier' }">
 
       <!-- 左侧：案件导航 -->
-      <aside class="case-left" v-if="activeView !== 'writing' && activeView !== 'reading'">
+      <aside class="case-left" v-if="activeView !== 'writing' && activeView !== 'reading' && activeView !== 'dossier'">
         <div class="left-section-label">案件视图</div>
         <nav class="case-view-nav">
           <button
@@ -97,8 +84,27 @@ const backToWorkbench = () => {
         </nav>
       </aside>
 
+      <!-- 智能阅卷视图（全宽独立渲染） -->
+      <template v-if="activeView === 'dossier'">
+        <div class="wide-view-nav">
+          <nav class="case-view-nav case-view-nav--inline">
+            <button
+              v-for="item in leftViews"
+              :key="item.key"
+              class="nav-item"
+              :class="{ 'nav-item--active': activeView === item.key }"
+              @click="activeView = item.key"
+            >
+              <span class="nav-item-dot"></span>
+              {{ item.label }}
+            </button>
+          </nav>
+        </div>
+        <DossierReadingView class="wide-view-content" />
+      </template>
+
       <!-- 文书写作视图（全宽独立渲染） -->
-      <template v-if="activeView === 'writing'">
+      <template v-else-if="activeView === 'writing'">
         <div class="wide-view-nav">
           <nav class="case-view-nav case-view-nav--inline">
             <button
@@ -116,7 +122,7 @@ const backToWorkbench = () => {
         <DocWriterView class="wide-view-content" />
       </template>
 
-      <!-- 智能阅卷视图（全宽独立渲染） -->
+      <!-- 文书审核视图（全宽独立渲染） -->
       <template v-else-if="activeView === 'reading'">
         <div class="wide-view-nav">
           <nav class="case-view-nav case-view-nav--inline">
@@ -204,36 +210,10 @@ const backToWorkbench = () => {
 
         </template>
 
-        <!-- ===== 时间线视图 ===== -->
-        <template v-else-if="activeView === 'timeline'">
-          <div class="view-title">案件时间线</div>
-          <div class="timeline-container">
-            <div
-              v-for="(item, index) in timelineItems"
-              :key="item.date + item.title"
-              class="timeline-item"
-            >
-              <div class="tl-left">
-                <div class="tl-dot" :class="typeIconClass(item.type)"></div>
-                <div class="tl-line" v-if="index < timelineItems.length - 1"></div>
-              </div>
-              <div class="tl-card">
-                <div class="tl-date">{{ item.date }}</div>
-                <div class="tl-title">{{ item.title }}</div>
-                <div class="tl-desc">{{ item.desc }}</div>
-                <div class="tl-meta">
-                  <span class="tl-source">{{ item.source }}</span>
-                  <el-tag type="primary" size="small" effect="plain">{{ item.focus }}</el-tag>
-                </div>
-              </div>
-            </div>
-          </div>
-        </template>
-
       </section>
 
       <!-- 右侧：待办 + 提醒 + AI要点 -->
-      <aside class="case-right" v-if="activeView !== 'writing' && activeView !== 'reading'">
+      <aside class="case-right" v-if="activeView !== 'writing' && activeView !== 'reading' && activeView !== 'dossier'">
 
         <!-- 当前待办 -->
         <div class="right-block">
@@ -268,9 +248,12 @@ const backToWorkbench = () => {
           </div>
         </div>
 
-        <!-- 重点提醒 -->
-        <div class="right-block">
-          <div class="right-block-title">重点提醒</div>
+        <!-- AI 智能提醒 -->
+        <div class="right-block right-block--ai">
+          <div class="right-block-title right-block-title--ai ai-merged-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 6v6l4 2"/><circle cx="19" cy="5" r="3" fill="currentColor" stroke="none"/></svg>
+            AI 智能提醒
+          </div>
           <div class="alert-list">
             <div
               v-for="(item, i) in sideAlerts"
@@ -280,21 +263,6 @@ const backToWorkbench = () => {
             >
               <span class="alert-dot" :class="`alert-dot--${item.level}`"></span>
               <span>{{ item.text }}</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- AI 要点 -->
-        <div class="right-block right-block--ai">
-          <div class="right-block-title right-block-title--ai">AI 当前要点</div>
-          <div class="ai-points-list">
-            <div
-              v-for="(pt, i) in aiPoints"
-              :key="i"
-              class="ai-point-row"
-            >
-              <span class="ai-point-num">{{ i + 1 }}</span>
-              <span>{{ pt }}</span>
             </div>
           </div>
         </div>
@@ -1124,6 +1092,27 @@ const backToWorkbench = () => {
   background: linear-gradient(135deg, #3b66f5, #6187fa);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+.ai-merged-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.ai-merged-title svg {
+  color: #3b66f5;
+  -webkit-text-fill-color: initial;
+}
+
+.ai-merged-sub {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-sub);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  padding-left: 2px;
+  opacity: 0.7;
 }
 
 /* 待办标签切换 */

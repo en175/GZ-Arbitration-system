@@ -1,14 +1,59 @@
 <script setup>
 import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
 import { filingStats, filingQueue, filterTabs, aiCheckDimensions } from './mock'
+
+const router = useRouter()
+
+// 点击"查看详情"→跳转到案件作业台，带案件 id query 参数
+const goToWorkbench = (item) => {
+  router.push({ path: '/case-workbench', query: { caseId: item.id, caseNo: item.caseNo } })
+}
 
 const activeFilter = ref('all')
 const expandedId = ref(null)
 
+// 搜索 & 筛选条件
+const searchKeyword = ref('')
+const dateStart = ref('')
+const dateEnd = ref('')
+
 const filteredList = computed(() => {
-  if (activeFilter.value === 'all') return filingQueue
-  return filingQueue.filter(c => c.status === activeFilter.value)
+  let list = filingQueue
+
+  // 按状态 Tab 筛选
+  if (activeFilter.value !== 'all') {
+    list = list.filter(c => c.status === activeFilter.value)
+  }
+
+  // 按案号/当事人关键字搜索
+  const kw = searchKeyword.value.trim()
+  if (kw) {
+    list = list.filter(c =>
+      c.caseNo.includes(kw) || c.parties.includes(kw)
+    )
+  }
+
+  // 按立案时间范围（filedAt 格式 'YYYY-MM-DD HH:mm'）
+  if (dateStart.value) {
+    list = list.filter(c => c.filedAt >= dateStart.value)
+  }
+  if (dateEnd.value) {
+    list = list.filter(c => c.filedAt.slice(0, 10) <= dateEnd.value)
+  }
+
+  return list
 })
+
+const hasActiveFilter = computed(() =>
+  searchKeyword.value.trim() || dateStart.value || dateEnd.value
+)
+
+const clearFilters = () => {
+  searchKeyword.value = ''
+  dateStart.value = ''
+  dateEnd.value = ''
+}
 
 const toggleExpand = (id) => {
   expandedId.value = expandedId.value === id ? null : id
@@ -52,7 +97,41 @@ const statusMap = {
       </div>
     </div>
 
-    <!-- 筛选 Tab -->
+    <!-- 搜索 & 时间筛选器 -->
+    <div class="search-bar">
+      <div class="search-input-wrap">
+        <svg class="search-icon" viewBox="0 0 16 16" fill="none">
+          <circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.4"/>
+          <path d="M10 10l3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+        </svg>
+        <input
+          v-model="searchKeyword"
+          class="search-input"
+          type="text"
+          placeholder="搜索案号或当事人..."
+        />
+        <button v-if="searchKeyword" class="search-clear" @click="searchKeyword = ''">
+          <svg viewBox="0 0 12 12" fill="none"><path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+
+      <div class="date-range-wrap">
+        <svg class="date-icon" viewBox="0 0 16 16" fill="none">
+          <rect x="1.5" y="2.5" width="13" height="12" rx="2" stroke="currentColor" stroke-width="1.3"/>
+          <path d="M5 1v3M11 1v3M1.5 6.5h13" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+        </svg>
+        <span class="date-label">立案时间</span>
+        <input v-model="dateStart" class="date-input" type="date" />
+        <span class="date-sep">—</span>
+        <input v-model="dateEnd" class="date-input" type="date" />
+      </div>
+
+      <button v-if="hasActiveFilter" class="clear-btn" @click="clearFilters">清除筛选</button>
+
+      <span class="result-count">共 {{ filteredList.length }} 条</span>
+    </div>
+
+    <!-- 状态 Tab -->
     <div class="filter-bar">
       <button
         v-for="tab in filterTabs"
@@ -73,11 +152,8 @@ const statusMap = {
       >
         <!-- 卡片主行 -->
         <div class="card-main" @click="toggleExpand(item.id)">
-
-          <!-- 左：紧急标记条 -->
           <div class="urgency-bar" :class="item.urgency === 'high' ? 'ubar--high' : 'ubar--normal'"></div>
 
-          <!-- 中：案件信息 -->
           <div class="card-info">
             <div class="card-top">
               <span class="card-case-no">{{ item.caseNo }}</span>
@@ -96,7 +172,6 @@ const statusMap = {
             </div>
           </div>
 
-          <!-- 右：AI 核查结果 -->
           <div class="card-ai-check">
             <div class="ai-check-bar">
               <div
@@ -113,35 +188,26 @@ const statusMap = {
             </div>
           </div>
 
-          <!-- 操作按钮 -->
           <div class="card-actions" @click.stop>
             <button v-if="item.status === 'pending'" class="action-btn action-btn--primary">确认受理</button>
             <button v-if="item.status === 'pending' && item.aiCheckFailed > 0" class="action-btn action-btn--warn">发补正通知</button>
             <button v-if="item.status === 'correcting'" class="action-btn action-btn--warn">催交材料</button>
             <button v-if="item.status === 'passed'" class="action-btn action-btn--done" disabled>已受理</button>
-            <button class="action-btn action-btn--ghost">查看详情</button>
+            <button class="action-btn action-btn--ghost" @click.stop="goToWorkbench(item)">查看详情</button>
           </div>
 
-          <!-- 展开箭头 -->
           <div class="expand-arrow" :class="{ 'expanded': expandedId === item.id }">›</div>
         </div>
 
-        <!-- 展开详情：AI 问题列表 -->
         <div v-if="expandedId === item.id" class="card-detail">
           <div v-if="item.aiCheckFailed > 0" class="detail-issues">
             <div class="detail-label">AI 发现的问题项：</div>
-            <div
-              v-for="(issue, idx) in item.aiIssues"
-              :key="idx"
-              class="issue-item"
-            >
+            <div v-for="(issue, idx) in item.aiIssues" :key="idx" class="issue-item">
               <span class="issue-dot"></span>
               {{ issue }}
             </div>
           </div>
-          <div v-else class="detail-all-pass">
-            AI 核查全部通过，材料完整，可直接确认受理。
-          </div>
+          <div v-else class="detail-all-pass">AI 核查全部通过，材料完整，可直接确认受理。</div>
           <div v-if="item.correctionDeadline" class="detail-deadline">
             补正截止：{{ item.correctionDeadline }}
           </div>
@@ -149,7 +215,7 @@ const statusMap = {
       </div>
 
       <div v-if="filteredList.length === 0" class="queue-empty">
-        暂无{{ filterTabs.find(t => t.key === activeFilter)?.label }}案件
+        暂无符合条件的案件
       </div>
     </div>
 
@@ -214,7 +280,6 @@ const statusMap = {
   margin-top: 6px;
 }
 
-/* AI 核查说明 */
 .ai-check-intro {
   flex: 1;
   background: linear-gradient(135deg, rgba(59, 102, 245, 0.05) 0%, rgba(255,255,255,0.9) 100%);
@@ -259,7 +324,150 @@ const statusMap = {
   border-radius: 20px;
 }
 
-/* ===== 筛选 Tab ===== */
+/* ===== 搜索 & 时间筛选 ===== */
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(229, 230, 235, 0.7);
+  border-radius: 12px;
+  padding: 10px 16px;
+  flex-wrap: wrap;
+}
+
+.search-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(248, 249, 252, 0.9);
+  border: 1px solid rgba(229, 230, 235, 0.8);
+  border-radius: 8px;
+  padding: 0 10px;
+  height: 34px;
+  min-width: 220px;
+  transition: border-color 0.2s;
+}
+
+.search-input-wrap:focus-within {
+  border-color: rgba(59, 102, 245, 0.4);
+  background: #fff;
+}
+
+.search-icon {
+  width: 14px;
+  height: 14px;
+  color: var(--text-sub);
+  flex-shrink: 0;
+}
+
+.search-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 13px;
+  color: var(--text-main);
+  outline: none;
+  min-width: 0;
+}
+
+.search-input::placeholder {
+  color: #c0c4cc;
+}
+
+.search-clear {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border: none;
+  background: rgba(200, 202, 208, 0.5);
+  border-radius: 50%;
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+  color: var(--text-sub);
+}
+
+.search-clear svg {
+  width: 8px;
+  height: 8px;
+}
+
+.date-range-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(248, 249, 252, 0.9);
+  border: 1px solid rgba(229, 230, 235, 0.8);
+  border-radius: 8px;
+  padding: 0 12px;
+  height: 34px;
+  transition: border-color 0.2s;
+}
+
+.date-range-wrap:focus-within {
+  border-color: rgba(59, 102, 245, 0.4);
+  background: #fff;
+}
+
+.date-icon {
+  width: 13px;
+  height: 13px;
+  color: var(--text-sub);
+  flex-shrink: 0;
+}
+
+.date-label {
+  font-size: 12px;
+  color: var(--text-sub);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.date-input {
+  border: none;
+  background: transparent;
+  font-size: 13px;
+  color: var(--text-main);
+  outline: none;
+  cursor: pointer;
+  width: 112px;
+}
+
+.date-sep {
+  font-size: 12px;
+  color: var(--text-sub);
+  flex-shrink: 0;
+}
+
+.clear-btn {
+  padding: 0 12px;
+  height: 34px;
+  border-radius: 8px;
+  border: 1px solid rgba(245, 63, 63, 0.2);
+  background: rgba(245, 63, 63, 0.05);
+  color: #f53f3f;
+  font-size: 12px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.18s;
+}
+
+.clear-btn:hover {
+  background: rgba(245, 63, 63, 0.1);
+}
+
+.result-count {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--text-sub);
+  white-space: nowrap;
+}
+
+/* ===== 状态 Tab ===== */
 .filter-bar {
   display: flex;
   gap: 6px;
@@ -313,12 +521,10 @@ const statusMap = {
 .card-main {
   display: flex;
   align-items: center;
-  gap: 0;
   cursor: pointer;
   padding-right: 14px;
 }
 
-/* 左侧紧急色条 */
 .urgency-bar {
   width: 4px;
   align-self: stretch;
@@ -329,7 +535,6 @@ const statusMap = {
 .ubar--high { background: #f53f3f; }
 .ubar--normal { background: #c9cdd4; }
 
-/* 案件信息 */
 .card-info {
   flex: 1;
   min-width: 0;
@@ -397,7 +602,6 @@ const statusMap = {
   font-weight: 500;
 }
 
-/* AI 核查结果区域 */
 .card-ai-check {
   flex-shrink: 0;
   width: 130px;
@@ -427,17 +631,9 @@ const statusMap = {
   font-size: 12px;
 }
 
-.check-pass {
-  color: #00b479;
-  font-weight: 500;
-}
+.check-pass { color: #00b479; font-weight: 500; }
+.check-fail { color: #f53f3f; font-weight: 500; }
 
-.check-fail {
-  color: #f53f3f;
-  font-weight: 500;
-}
-
-/* 操作按钮 */
 .card-actions {
   flex-shrink: 0;
   display: flex;
@@ -474,9 +670,7 @@ const statusMap = {
   border-color: rgba(255, 125, 0, 0.2);
 }
 
-.action-btn--warn:hover {
-  background: rgba(255, 125, 0, 0.14);
-}
+.action-btn--warn:hover { background: rgba(255, 125, 0, 0.14); }
 
 .action-btn--done {
   background: rgba(0, 180, 121, 0.08);
@@ -496,7 +690,6 @@ const statusMap = {
   border-color: rgba(59, 102, 245, 0.25);
 }
 
-/* 展开箭头 */
 .expand-arrow {
   font-size: 18px;
   color: var(--text-sub);
@@ -506,11 +699,8 @@ const statusMap = {
   line-height: 1;
 }
 
-.expand-arrow.expanded {
-  transform: rotate(90deg);
-}
+.expand-arrow.expanded { transform: rotate(90deg); }
 
-/* 展开详情 */
 .card-detail {
   border-top: 1px solid rgba(229, 230, 235, 0.5);
   padding: 12px 20px 14px;
@@ -562,7 +752,6 @@ const statusMap = {
   font-weight: 500;
 }
 
-/* 空状态 */
 .queue-empty {
   text-align: center;
   padding: 40px 0;

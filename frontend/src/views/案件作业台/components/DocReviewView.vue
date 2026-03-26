@@ -12,7 +12,11 @@
       v-model="content"
       :sections="sections"
       :editable="false"
-    />
+    >
+      <template #cover>
+        <PdfPageCover src="/verdict-cover.pdf" />
+      </template>
+    </EditorArea>
     <RightAiAnalysisPanel
       :results="analysisResults"
       :activeModuleKey="activeModuleKey"
@@ -25,6 +29,7 @@
 import { ref } from 'vue';
 import LeftCaseReviewPanel from './LeftCaseReviewPanel.vue';
 import EditorArea from '@/components/editor/EditorArea.vue';
+import PdfPageCover from '@/components/editor/PdfPageCover.vue';
 import RightAiAnalysisPanel from './RightAiAnalysisPanel.vue';
 
 import {

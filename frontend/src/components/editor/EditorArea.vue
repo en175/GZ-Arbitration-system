@@ -96,18 +96,25 @@
 
     <!-- 模块导航条 -->
     <div v-if="sections && sections.length > 0" class="section-nav">
+      <span class="section-nav-label">文书目录</span>
+      <div class="section-nav-divider"></div>
       <button
-        v-for="sec in sections"
+        v-for="(sec, idx) in sections"
         :key="sec.key"
         type="button"
         class="section-nav-item"
         :class="{ active: activeSection === sec.key }"
         @click="handleSectionClick(sec.key)"
-      >{{ sec.label }}</button>
+      >
+        <span class="section-nav-num">{{ idx + 1 }}</span>
+        <span class="section-nav-text">{{ sec.label }}</span>
+      </button>
     </div>
 
     <!-- Editor Content -->
     <div ref="editorScrollRef" class="editor-content-wrapper" @scroll="handleEditorScroll" @click="handleContentClick">
+      <slot name="cover" />
+      <div v-if="$slots.cover" class="cover-to-content-gap"></div>
       <editor-content :editor="editor" class="wb-paper" />
       <div ref="commentUnderlineLayerRef" class="comment-underline-layer"></div>
       <div ref="highlightOverlayRef" class="highlight-overlay" v-show="highlightOverlayActive"></div>
@@ -685,32 +692,84 @@ defineExpose({
 .section-nav {
   display: flex;
   align-items: center;
-  gap: 2px;
-  padding: 6px 16px;
-  background: #fff;
-  border-bottom: 1px solid var(--color-divider);
+  gap: 4px;
+  padding: 0 16px;
+  height: 44px;
+  background: linear-gradient(135deg, #f0f4ff 0%, #fafbff 100%);
+  border-bottom: 1px solid rgba(59, 102, 245, 0.12);
   flex-shrink: 0;
   overflow-x: auto;
+  scrollbar-width: none;
 }
+.section-nav::-webkit-scrollbar { display: none; }
+
+.section-nav-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-primary);
+  white-space: nowrap;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+
+.section-nav-divider {
+  width: 1px;
+  height: 18px;
+  background: rgba(59, 102, 245, 0.2);
+  margin: 0 8px 0 4px;
+  flex-shrink: 0;
+}
+
 .section-nav-item {
-  padding: 4px 12px;
-  border: none;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 11px 5px 8px;
+  border: 1px solid transparent;
   background: transparent;
-  border-radius: 6px;
-  font-size: 12px;
+  border-radius: 20px;
+  font-size: 12.5px;
   font-weight: 500;
-  color: var(--color-text-sub);
+  color: #5a6480;
   cursor: pointer;
   transition: all 0.15s;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 .section-nav-item:hover {
-  background: #f0f4ff;
+  background: rgba(59, 102, 245, 0.08);
   color: var(--color-primary);
+  border-color: rgba(59, 102, 245, 0.15);
 }
 .section-nav-item.active {
-  background: var(--color-primary);
+  background: linear-gradient(135deg, #3b66f5, #6187fa);
   color: #fff;
+  border-color: transparent;
+  box-shadow: 0 2px 8px rgba(59, 102, 245, 0.3);
+}
+
+.section-nav-num {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  background: rgba(59, 102, 245, 0.12);
+  color: var(--color-primary);
+  font-size: 10px;
+  font-weight: 700;
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+.section-nav-item.active .section-nav-num {
+  background: rgba(255, 255, 255, 0.25);
+  color: #fff;
+}
+
+.section-nav-text {
+  line-height: 1;
 }
 
 .editor-content-wrapper {
@@ -720,6 +779,12 @@ defineExpose({
   padding: 24px;
   display: block;
   min-height: 0;
+  background: #fff;
+}
+
+.cover-to-content-gap {
+  height: 40px;
+  background: #fff;
 }
 
 .comment-underline-layer {

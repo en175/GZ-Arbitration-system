@@ -256,6 +256,121 @@ export const MOCK_MATERIALS = [
       { id: 'w7-e1', claim: '申请人庭审陈述', excerpt: '申请人代理人黄德伟当庭确认货款总额 82,957.70 元，强调签收回执证明交货完成，质量异议超期。', conflictLevel: 'none', conflictNote: '' },
       { id: 'w7-e2', claim: '缺席审理记录', excerpt: '被申请人经合法通知未出庭，依规缺席审理，视为放弃答辩权利及质证机会。', conflictLevel: 'none', conflictNote: '' }
     ]
+  },
+  {
+    id: 'w8',
+    title: '营业执照副本（申请人）',
+    type: 'doc',
+    source: '申请人提交',
+    sourceParty: 'applicant',
+    submittedAt: '2026-02-18',
+    fileType: 'PDF',
+    fileSize: '680 KB',
+    evidenceItems: [
+      { id: 'w8-e1', claim: '主体资格证明', excerpt: '营业执照载明：统一社会信用代码 91441827MA52XXXXXX，名称"新菱空调（佛冈）有限公司"，住所广东省清远市佛冈县经济开发区兴发大道 18 号，经营范围含"空调设备销售"，状态"存续"。', conflictLevel: 'none', conflictNote: '' },
+      { id: 'w8-e2', claim: '法定代表人核验', excerpt: '执照显示法定代表人为梁某某，与申请书首部信息一致，主体资格无异议。', conflictLevel: 'none', conflictNote: '' }
+    ]
+  },
+  {
+    id: 'w9',
+    title: '营业执照副本（被申请人）',
+    type: 'doc',
+    source: '申请人提交',
+    sourceParty: 'applicant',
+    submittedAt: '2026-02-18',
+    fileType: 'PDF',
+    fileSize: '620 KB',
+    evidenceItems: [
+      { id: 'w9-e1', claim: '被申请人主体资格', excerpt: '被申请人营业执照载明：统一社会信用代码 91440101MA5AXXXXXX，名称"广东恒力建设工程有限公司"，住所广东省广州市天河区黄埔大道西 100 号，经营范围含"建筑工程施工、机电设备安装"。', conflictLevel: 'none', conflictNote: '' },
+      { id: 'w9-e2', claim: '法定代表人核验', excerpt: '执照显示法定代表人为郑某某，职务"执行董事"，与被申请人一方基本信息一致，主体资格具备。', conflictLevel: 'none', conflictNote: '' }
+    ]
+  },
+  {
+    id: 'w10',
+    title: '授权委托书（申请人代理人）',
+    type: 'doc',
+    source: '申请人提交',
+    sourceParty: 'applicant',
+    submittedAt: '2026-02-18',
+    fileType: 'PDF',
+    fileSize: '310 KB',
+    evidenceItems: [
+      { id: 'w10-e1', claim: '代理授权有效性', excerpt: '委托人新菱空调（佛冈）有限公司授权黄德伟律师（广东XX律师事务所）代理本案全部仲裁事宜，授权范围含出庭、签署文件、申请保全、和解等，签署日期 2026 年 2 月 15 日，加盖公司公章及法定代表人签字。', conflictLevel: 'none', conflictNote: '' },
+      { id: 'w10-e2', claim: '代理人律师证验证', excerpt: '附件律师执业证编号核验通过，黄德伟现执业单位与委托书记载一致，代理资格具备。', conflictLevel: 'none', conflictNote: '' }
+    ]
+  },
+  {
+    id: 'w11',
+    title: '增值税专用发票（3份）',
+    type: 'evidence',
+    source: '申请人提交',
+    sourceParty: 'applicant',
+    submittedAt: '2025-11-10',
+    fileType: 'PDF',
+    fileSize: '1.1 MB',
+    evidenceItems: [
+      { id: 'w11-e1', claim: '发票金额与合同核对', excerpt: '发票一：开票日期 2025-11-10，品名"空调主机组（GZ-KC01~20）"，含税金额 49,856.00 元；发票二：品名"空调辅件及安装材料"，含税金额 22,180.70 元；发票三：品名"调试服务费"，含税金额 10,921.00 元，三份合计 82,957.70 元，与合同总价吻合。', conflictLevel: 'none', conflictNote: '' },
+      { id: 'w11-e2', claim: '发票开具方核验', excerpt: '三份发票销售方均为"新菱空调（佛冈）有限公司"，购买方为"广东恒力建设工程有限公司"，税号与营业执照一致。', conflictLevel: 'none', conflictNote: '' },
+      { id: 'w11-e3', claim: '金额差异说明', excerpt: '被申请人主张与合同存在约 300 元差异，但对照三份发票明细与采购合同附件价格清单，合计金额均为 82,957.70 元，差异说法无据。', conflictLevel: 'medium', conflictNote: '被申请人"约300元差异"主张缺乏具体说明，发票证据可反驳。' }
+    ]
+  },
+  {
+    id: 'w12',
+    title: '货物出库记录及发货清单',
+    type: 'evidence',
+    source: '申请人提交',
+    sourceParty: 'applicant',
+    submittedAt: '2025-11-08',
+    fileType: 'PDF',
+    fileSize: '860 KB',
+    evidenceItems: [
+      { id: 'w12-e1', claim: '出库时间与数量', excerpt: '出库单编号 CK-2025-1107，出库日期 2025 年 11 月 7 日，货物型号清单 20 项，数量与合同附件规格表完全一致，由仓管人员及品控员共同签署确认。', conflictLevel: 'none', conflictNote: '' },
+      { id: 'w12-e2', claim: '型号核对', excerpt: '发货清单载明型号编号 GZ-KC01 至 GZ-KC20，规格参数与采购合同附件"设备型号一览表"逐一对应，被申请人主张"20%型号不符"无对应单据支撑。', conflictLevel: 'high', conflictNote: '出库清单型号与合同一致，可直接反驳被申请人型号不符主张。' },
+      { id: 'w12-e3', claim: '物流配送记录', excerpt: '附物流运单（顺丰快运，运单号 SF1234567890），配送时间 2025-11-07 发出，2025-11-08 签收完毕，与送货单日期吻合。', conflictLevel: 'none', conflictNote: '' }
+    ]
+  },
+  {
+    id: 'w13',
+    title: '往来邮件及微信沟通记录',
+    type: 'evidence',
+    source: '申请人提交',
+    sourceParty: 'applicant',
+    submittedAt: '2026-02-18',
+    fileType: 'PDF',
+    fileSize: '2.4 MB',
+    evidenceItems: [
+      { id: 'w13-e1', claim: '付款催告邮件记录', excerpt: '2025-12-01 申请人项目经理向被申请人工程部邮箱（heli-eng@xx.com）发送催款邮件，邮件正文确认货款余额82,957.70元，请求于12月8日前完成付款。被申请人未回复。', conflictLevel: 'none', conflictNote: '' },
+      { id: 'w13-e2', claim: '质量问题沟通记录', excerpt: '2025-11-20 被申请人项目负责人微信消息（截图附公证认证）："设备到了，型号大部分没问题，但有几台空调外机我们内部还在核实。"未提及具体型号不符，与答辩书主张的"20%不符"存在明显出入。', conflictLevel: 'high', conflictNote: '微信原文仅提"几台"，与答辩书"约20%（约4台）"不符，有利于反驳质量异议规模。' },
+      { id: 'w13-e3', claim: '付款承诺记录', excerpt: '2025-12-03 被申请人采购负责人微信回复："款项在走内部流程，最迟月底打给你们。"可证明被申请人明确知悉付款义务且并未否认，为逾期付款责任归属提供依据。', conflictLevel: 'none', conflictNote: '' }
+    ]
+  },
+  {
+    id: 'w14',
+    title: '组庭通知书与仲裁员名单公示',
+    type: 'doc',
+    source: '仲裁庭记录',
+    sourceParty: 'tribunal',
+    submittedAt: '2026-03-20',
+    fileType: 'PDF',
+    fileSize: '420 KB',
+    evidenceItems: [
+      { id: 'w14-e1', claim: '组庭程序合法性', excerpt: '广州仲裁委员会于 2026 年 3 月 20 日出具组庭通知书，本案适用简易程序，由独任仲裁员陈某某独立审理。双方均于规定期限内收到组庭通知，程序合法。', conflictLevel: 'none', conflictNote: '' },
+      { id: 'w14-e2', claim: '仲裁员回避声明', excerpt: '独任仲裁员陈某某于 2026-03-22 签署声明，确认与本案双方当事人无关联、无利益冲突，无须回避。双方在法定期限内均未提出回避申请。', conflictLevel: 'none', conflictNote: '' }
+    ]
+  },
+  {
+    id: 'w15',
+    title: '开庭通知书（2026-04-15）',
+    type: 'doc',
+    source: '仲裁庭记录',
+    sourceParty: 'tribunal',
+    submittedAt: '2026-03-28',
+    fileType: 'PDF',
+    fileSize: '280 KB',
+    evidenceItems: [
+      { id: 'w15-e1', claim: '开庭送达记录', excerpt: '开庭通知书由广州仲裁委员会于 2026 年 3 月 28 日发出，庭审时间定于 2026 年 4 月 15 日上午 9:30，地点广州仲裁委第三庭审室。申请人代理人签收回执日期 2026-03-30，被申请人快递回执显示 2026-03-31 签收。', conflictLevel: 'none', conflictNote: '' },
+      { id: 'w15-e2', claim: '缺席事实前置依据', excerpt: '被申请人于规定期限内未提出延期申请，庭审当日经点名确认缺席，该通知书为缺席审理的程序合法性提供依据。', conflictLevel: 'none', conflictNote: '' }
+    ]
   }
 ];
 
@@ -264,9 +379,6 @@ export const MOCK_AI_MSGS = [
 ];
 
 export const MOCK_EDITOR_CONTENT = `
-  <h1 style="text-align: center">裁决书</h1>
-  <p data-paragraph-id="p-caseno" style="text-align: center">（2026）粤仲案字第 5412 号</p>
-
   <h2 data-paragraph-id="sec-header">一、首部</h2>
   <p data-paragraph-id="p-applicant"><strong>申 请 人：</strong>新菱空调（佛冈）有限公司</p>
   <p data-paragraph-id="p-agent1"><strong>住　　所：</strong>广东省清远市佛冈县经济开发区兴发大道 18 号</p>

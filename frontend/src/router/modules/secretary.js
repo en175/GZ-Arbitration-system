@@ -1,13 +1,13 @@
 const secretaryRoutes = [
   {
     path: 'case-workbench',
-    name: '案件办理台',
-    component: () => import('../../views/案件总作业台/index.vue'),
+    name: '案件作业台',
+    component: () => import('../../views/案件作业台/index.vue'),
   },
   {
     path: 'workbench',
-    name: '办案秘书工作台',
-    component: () => import('../../views/办案秘书工作台/index.vue'),
+    name: '工作台',
+    component: () => import('../../views/工作台/index.vue'),
   },
   {
     path: 'node-tracking',
@@ -17,7 +17,17 @@ const secretaryRoutes = [
   {
     path: 'batch-filing',
     name: '立案中心',
-    component: () => import('../../views/批量立案中心/index.vue'),
+    component: () => import('../../views/立案中心/index.vue'),
+  },
+  {
+    path: 'arbitrator-workbench',
+    name: '仲裁员工作台',
+    component: () => import('../../views/仲裁员工作台/index.vue'),
+  },
+  {
+    path: 'admin-dashboard',
+    name: '管理驾驶舱',
+    component: () => import('../../views/管理驾驶舱/index.vue'),
   },
 ]
 

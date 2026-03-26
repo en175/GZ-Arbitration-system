@@ -30,9 +30,9 @@ export const caseBaseInfo = {
 // 左侧导航视图列表
 export const leftViews = [
   { key: 'overview', label: '案件总览' },
-  { key: 'timeline', label: '时间线' },
-  { key: 'reading', label: '智能阅卷' },
+  { key: 'dossier', label: '智能阅卷' },
   { key: 'writing', label: '文书写作' },
+  { key: 'reading', label: '文书审核' },
 ]
 
 // 总览 - 顶部基础信息卡（3列）
