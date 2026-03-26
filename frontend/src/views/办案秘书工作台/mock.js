@@ -1,0 +1,253 @@
+// ============================================================
+// 办案秘书工作台 Mock 数据
+// 对应案件：(2026)粤仲案字第5412号 为演示主线案件
+// 秘书：陈炜
+// ============================================================
+
+// 顶部告警卡片（4张横向排列）
+export const alertCards = [
+  {
+    key: 'urgent',
+    label: '临期待办',
+    value: 3,
+    unit: '件',
+    desc: '今日须完成处理',
+    type: 'danger',
+    filterKey: 'urgent',   // 跳转在办案件并筛选紧急/高优先
+  },
+  {
+    key: 'overtime',
+    label: '超期案件',
+    value: 1,
+    unit: '件',
+    desc: '已停留逾36小时',
+    type: 'overtime',
+    filterKey: 'overtime', // 跳转在办案件并筛选存在问题项
+  },
+  {
+    key: 'pending',
+    label: '待确认事项',
+    value: 5,
+    unit: '件',
+    desc: '等待人工确认',
+    type: 'warning',
+    filterKey: 'issues',   // 跳转在办案件并筛选有问题的案件
+  },
+  {
+    key: 'total',
+    label: '今日待办总计',
+    value: 10,
+    unit: '件',
+    desc: '当前工作量',
+    type: 'primary',
+    filterKey: 'all',      // 跳转在办案件展示全部
+  },
+]
+
+// 今日待办列表（10条，覆盖不同业务节点与优先级）
+// priority: urgent（临期，红）/ high（高，橙）/ normal（正常，蓝）/ low（普通，灰）
+// todoType: 'doc'=文书送达类 | 'node'=节点归档类
+export const todayTodos = [
+  {
+    id: 'TODO-001',
+    caseId: 'GZ-2026-5412',
+    caseNo: '（2026）粤仲案字第5412号',
+    action: '发送开庭通知书',
+    desc: '需在今日完成通知送达，否则影响庭审节点推进',
+    priority: 'urgent',
+    due: '今日 18:00',
+    dueType: 'danger',
+    stage: '庭审准备',
+    todoType: 'doc',
+  },
+  {
+    id: 'TODO-002',
+    caseId: 'GZ-2026-3821',
+    caseNo: '（2026）粤仲案字第3821号',
+    action: '发送答辩期限催告通知',
+    desc: '答辩期限将至，需向被申请人发出书面催告并留存送达记录',
+    priority: 'urgent',
+    due: '今日 16:30',
+    dueType: 'danger',
+    stage: '文书送达',
+    todoType: 'doc',
+  },
+  {
+    id: 'TODO-003',
+    caseId: 'GZ-2026-4520',
+    caseNo: '（2026）粤仲案字第4520号',
+    action: '发送材料补正通知书',
+    desc: '申请人材料存在2项缺失，需在时限内发出补正通知书',
+    priority: 'urgent',
+    due: '今日 17:00',
+    dueType: 'danger',
+    stage: '材料补正',
+    todoType: 'doc',
+  },
+  {
+    id: 'TODO-004',
+    caseId: 'GZ-2026-5412',
+    caseNo: '（2026）粤仲案字第5412号',
+    action: '推进证据交换节点状态',
+    desc: '双方证据目录已提交，需推进系统节点并更新当前阶段',
+    priority: 'high',
+    due: '明日 10:00',
+    dueType: 'warning',
+    stage: '证据交换',
+    todoType: 'node',
+  },
+  {
+    id: 'TODO-005',
+    caseId: 'GZ-2026-2190',
+    caseNo: '（2026）粤仲案字第2190号',
+    action: '核实送达回执并完成归档',
+    desc: '文书送达完成后需确认回执已回收，并录入系统完成存档',
+    priority: 'high',
+    due: '明日 12:00',
+    dueType: 'warning',
+    stage: '文书送达',
+    todoType: 'doc',
+  },
+  {
+    id: 'TODO-006',
+    caseId: 'GZ-2026-3821',
+    caseNo: '（2026）粤仲案字第3821号',
+    action: '提交争议焦点确认单至仲裁员',
+    desc: 'AI已生成争议焦点草稿，需提交仲裁员核对并完成人工确认签署',
+    priority: 'normal',
+    due: '明日 14:00',
+    dueType: 'warning',
+    stage: '焦点确认',
+    todoType: 'node',
+  },
+  {
+    id: 'TODO-007',
+    caseId: 'GZ-2026-1847',
+    caseNo: '（2026）粤仲案字第1847号',
+    action: '上传并归档仲裁裁决书',
+    desc: '裁决书已完成签署，需上传扫描件并在系统完成结案标记',
+    priority: 'normal',
+    due: '后日 10:00',
+    dueType: 'info',
+    stage: '结案归档',
+    todoType: 'node',
+  },
+  {
+    id: 'TODO-008',
+    caseId: 'GZ-2026-6033',
+    caseNo: '（2026）粤仲案字第6033号',
+    action: '填报超期说明并发起催办',
+    desc: '节点停留已超均值1.8倍，需填写超期原因说明并通知相关方',
+    priority: 'normal',
+    due: '本周四',
+    dueType: 'info',
+    stage: '超期处理',
+    todoType: 'node',
+  },
+  {
+    id: 'TODO-009',
+    caseId: 'GZ-2026-0944',
+    caseNo: '（2026）粤仲案字第0944号',
+    action: '整理庭审笔录并提交仲裁员审核',
+    desc: '本次庭审笔录需完成校对整理并上传至系统，提交仲裁员签字确认',
+    priority: 'low',
+    due: '本周五',
+    dueType: 'info',
+    stage: '庭审后处理',
+    todoType: 'node',
+  },
+  {
+    id: 'TODO-010',
+    caseId: 'GZ-2026-2190',
+    caseNo: '（2026）粤仲案字第2190号',
+    action: '跟进调解进展并更新系统备注',
+    desc: '调解方已提出和解意见，需跟进最新动态并在系统中记录当前状态',
+    priority: 'low',
+    due: '本周内',
+    dueType: 'info',
+    stage: '调解跟进',
+    todoType: 'node',
+  },
+]
+
+// 我的在办案件（轻量卡片展示）
+export const myCaseCards = [
+  {
+    id: 'GZ-2026-5412',
+    caseNo: '（2026）粤仲案字第5412号',
+    parties: '新菱空调（佛冈）有限公司 诉 广东恒力建设工程有限公司',
+    caseType: '买卖合同纠纷',
+    stage: '证据交换',
+    stageType: 'primary',
+    lastAction: '仲裁员确认争议焦点拆分方案，待推进节点',
+    lastTime: '今日 09:42',
+    hasPending: true,
+    urgentCount: 1,
+  },
+  {
+    id: 'GZ-2026-3821',
+    caseNo: '（2026）粤仲案字第3821号',
+    parties: '华恒供应链管理 诉 南方设备制造有限公司',
+    caseType: '采购付款纠纷',
+    stage: '答辩阶段',
+    stageType: 'warning',
+    lastAction: '催收通知已发出，等待被申请人提交答辩意见',
+    lastTime: '今日 08:55',
+    hasPending: true,
+    urgentCount: 2,
+  },
+  {
+    id: 'GZ-2026-2190',
+    caseNo: '（2026）粤仲案字第2190号',
+    parties: '金桥物业管理集团 诉 天禾物流科技有限公司',
+    caseType: '租赁合同纠纷',
+    stage: '调解进行中',
+    stageType: 'success',
+    lastAction: '调解员提出和解意见，各方正在商议确认',
+    lastTime: '昨日 17:30',
+    hasPending: false,
+    urgentCount: 0,
+  },
+  {
+    id: 'GZ-2026-4520',
+    caseNo: '（2026）粤仲案字第4520号',
+    parties: '粤安企业管理咨询 诉 智合传媒科技股份有限公司',
+    caseType: '服务合同纠纷',
+    stage: '材料补正',
+    stageType: 'danger',
+    lastAction: '补正通知书待发送，申请人材料存在缺失',
+    lastTime: '今日 10:15',
+    hasPending: true,
+    urgentCount: 1,
+  },
+  {
+    id: 'GZ-2026-1847',
+    caseNo: '（2026）粤仲案字第1847号',
+    parties: '泽明数字科技 诉 蓝岸互动传播有限公司',
+    caseType: '知识产权纠纷',
+    stage: '结案归档',
+    stageType: 'info',
+    lastAction: '裁决书已签署，待完成系统归档',
+    lastTime: '昨日 15:22',
+    hasPending: false,
+    urgentCount: 0,
+  },
+]
+
+// 右侧 AI 工作助手内容
+export const aiAssistContent = {
+  priorityTips: [
+    'TODO-001、002、003 临期，建议今日16:00前完成处理，否则将触发节点超时',
+    '（2026）粤仲案字第5412号 送达凭证尚未补齐，存在证据链薄弱风险',
+    '超期案件1件（第6033号）已停留36小时，建议今日内发起催办',
+  ],
+  suggestions: [
+    '优先处理临期待办3件，可有效降低本周超时风险',
+    '第5412号案建议在庭审前补齐送达凭证并确认证据交换完整',
+    '第3821号答辩意见到期后可直接启动焦点归纳流程',
+  ],
+  ruleHints: [
+    '规则 R-12：临期≤1天 + 关键材料缺失 → 高优先标记',
+    '规则 R-07：节点停留超均值1.8倍 → 超期预警触发',
+  ],
+}

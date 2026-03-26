@@ -1,0 +1,72 @@
+:root {
+  /* 基础色彩：从纯蓝向更高级的渐变蓝/冷色蓝偏移 */
+  --primary-color: #3b66f5;
+  --primary-soft: #edf2ff;
+  --primary-gradient: linear-gradient(135deg, #3b66f5 0%, #6187fa 100%);
+  
+  /* 辅助状态色彩：饱和度适中，避免过艳 */
+  --success-color: #00b479;
+  --warning-color: #ff9900;
+  --danger-color: #f53f3f;
+  
+  /* 文本色彩：加深对比，提升阅读体验 */
+  --text-main: #1d2129;
+  --text-regular: #4e5969;
+  --text-sub: #86909c;
+  
+  /* 背景与边框 */
+  --bg-page: #f5f7fa; /* 非常浅的灰蓝色，提升呼吸感 */
+  --bg-card: rgba(255, 255, 255, 0.85); /* 基础卡片微透明 */
+  --bg-card-solid: #ffffff;
+  --line-color: rgba(229, 230, 235, 0.6);
+  
+  /* 间距与圆角：全面增大，强调呼吸感和灵动性 */
+  --gap-8: 8px;
+  --gap-12: 12px;
+  --gap-16: 16px;
+  --gap-24: 24px;
+  --gap-32: 32px;
+  
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  
+  /* 阴影：多层次、极轻柔、带有色彩倾向 */
+  --shadow-soft: 0 4px 24px rgba(59, 102, 245, 0.04);
+  --shadow-float: 0 8px 32px rgba(59, 102, 245, 0.08);
+  
+  /* 玻璃质感特定参数 */
+  --glass-blur: blur(20px);
+  --glass-border: 1px solid rgba(255, 255, 255, 0.6);
+
+  /* ── CSS 变量别名（供迁移组件使用）── */
+  --color-primary: var(--primary-color);
+  --color-accent: var(--primary-color);
+  --color-text-body: var(--text-regular);
+  --color-text-sub: var(--text-sub);
+  --color-text-title: var(--text-main);
+  --color-text-disabled: #c9cdd4;
+  --color-bg-body: var(--bg-page);
+  --color-border: var(--line-color);
+  --color-divider: rgba(229, 230, 235, 0.5);
+  --color-muted: rgba(245, 247, 250, 0.8);
+  --color-card: var(--bg-card-solid);
+  --color-warning: var(--warning-color);
+  --color-success: var(--success-color);
+  --color-danger: var(--danger-color);
+  --color-primary-light: var(--primary-soft);
+  --color-background: var(--bg-page);
+  --color-success-light: rgba(0, 180, 121, 0.06);
+  --color-danger-light: rgba(245, 63, 63, 0.06);
+  --color-warning-light: rgba(255, 153, 0, 0.06);
+  --radius-full: 999px;
+  --shadow-xs: 0 1px 4px rgba(0, 0, 0, 0.06);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 24px rgba(59, 102, 245, 0.12);
+  --shadow-xl: 0 12px 32px rgba(15, 23, 42, 0.12);
+  --shadow-glow: 0 0 0 2px rgba(59, 102, 245, 0.12);
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.2s ease;
+  --gradient-primary: linear-gradient(135deg, #1e3170 0%, #3d56c8 100%);
+}
